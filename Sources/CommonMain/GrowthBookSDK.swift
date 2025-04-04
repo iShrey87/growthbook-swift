@@ -11,6 +11,7 @@ protocol GrowthBookProtocol: AnyObject {
 }
 
 public struct GrowthBookModel {
+    var apiURLRequest: URLRequest?
     var apiHost: String?
     var clientKey: String?
     var encryptionKey: String?
@@ -110,6 +111,7 @@ public struct GrowthBookModel {
 
     @objc public func initializer() -> GrowthBookSDK {
         let gbContext = Context(
+            urlRequest: growthBookBuilderModel.apiURLRequest,
             apiHost: growthBookBuilderModel.apiHost,
             clientKey: growthBookBuilderModel.clientKey,
             encryptionKey: growthBookBuilderModel.encryptionKey,
@@ -192,7 +194,8 @@ public struct GrowthBookModel {
         if gbContext.remoteEval {
             refreshForRemoteEval()
         } else {
-            featureVM.fetchFeatures(apiUrl: gbContext.getFeaturesURL())
+            //featureVM.fetchFeatures(apiUrl: gbContext.getFeaturesURL())
+            featureVM.fetchFeatures(apiUrlRequest: gbContext.getFeaturesURLRequest())
         }
     }
     
@@ -258,7 +261,8 @@ public struct GrowthBookModel {
     @objc public func refreshForRemoteEval() {
         if !gbContext.remoteEval { return }
         let payload = RemoteEvalParams(attributes: gbContext.attributes, forcedFeatures: self.forcedFeatures, forcedVariations: gbContext.forcedVariations )
-        featureVM.fetchFeatures(apiUrl: gbContext.getRemoteEvalUrl(), remoteEval: gbContext.remoteEval, payload: payload)
+        //featureVM.fetchFeatures(apiUrl: gbContext.getRemoteEvalUrl(), remoteEval: gbContext.remoteEval, payload: payload)
+        featureVM.fetchFeatures(apiUrlRequest: gbContext.getFeaturesURLRequest(), remoteEval: gbContext.remoteEval, payload: payload)
     }
 
     /// The feature method takes a single string argument, which is the unique identifier for the feature and returns a FeatureResult object.

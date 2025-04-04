@@ -6,6 +6,8 @@ import Foundation
 @objc public protocol NetworkProtocol: AnyObject {
     func consumeGETRequest(url: String, successResult: @escaping (Data) -> Void, errorResult: @escaping (Error) -> Void)
     func consumePOSTRequest(url: String, params: [String : Any], successResult: @escaping (Data) -> Void, errorResult: @escaping (Error) -> Void)
+    func consumeGetRequest(urlRequest: URLRequest, successResult: @escaping (Data) -> Void, errorResult: @escaping (Error) -> Void)
+    func consumePOSTRequest(urlRequest: URLRequest, params: [String: Any], successResult: @escaping (Data) -> Void, errorResult: @escaping (Error) -> Void)
 }
 
 class CoreNetworkClient: NetworkProtocol {
@@ -39,6 +41,43 @@ class CoreNetworkClient: NetworkProtocol {
         }
         
         let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                errorResult(error)
+            }
+            guard let responseData = data else { return }
+            successResult(responseData)
+        }
+        task.resume()
+    }
+    
+    func consumePOSTRequest(urlRequest: URLRequest, params: [String: Any], successResult: @escaping (Data) -> Void, errorResult: @escaping (Error) -> Void) {
+        
+        let session = URLSession.shared
+        var request = urlRequest
+        request.httpMethod = "POST"
+        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
+        } catch let error {
+            errorResult(error)
+        }
+        
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                errorResult(error)
+            }
+            guard let responseData = data else { return }
+            successResult(responseData)
+        }
+        task.resume()
+    }
+    
+    func consumeGetRequest(urlRequest: URLRequest, successResult: @escaping (Data) -> Void, errorResult: @escaping (Error) -> Void) {
+        let session = URLSession.shared
+        let task = session.dataTask(with: urlRequest) { data, response, error in
             if let error = error {
                 errorResult(error)
             }

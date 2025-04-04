@@ -2,6 +2,7 @@ import Foundation
 
 /// Defines the GrowthBook context.
 @objc public class Context: NSObject {
+    public let urlRequest: URLRequest?
     /// your api host
     public let apiHost: String?
     /// unique client key
@@ -34,7 +35,8 @@ import Foundation
     
     public var savedGroups: JSON?
 
-    init(apiHost: String?,
+    init(urlRequest: URLRequest?,
+        apiHost: String?,
          clientKey: String?,
          encryptionKey: String?,
          isEnabled: Bool,
@@ -49,6 +51,7 @@ import Foundation
          backgroundSync: Bool = false,
          remoteEval: Bool = false,
          savedGroups: JSON? = nil) {
+        self.urlRequest = urlRequest
         self.apiHost = apiHost
         self.clientKey = clientKey
         self.encryptionKey = encryptionKey
@@ -69,6 +72,14 @@ import Foundation
     @objc public func getFeaturesURL() -> String? {
         if let apiHost = apiHost, let clientKey = clientKey {
             return "\(apiHost)/api/features/\(clientKey)"
+        } else {
+            return nil
+        }
+    }
+    
+    @objc public func getFeaturesURLRequest() -> URLRequest? {
+        if let request = urlRequest {
+            return request
         } else {
             return nil
         }

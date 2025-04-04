@@ -17,6 +17,14 @@ class FeaturesDataSource {
         })
     }
     
+    func fetchFeatures(apiUrlRequest: URLRequest, fetchResult: @escaping (Result<Data, Error>) -> Void) {
+        dispatcher.consumeGetRequest(urlRequest: apiUrlRequest) { data in
+            fetchResult(.success(data))
+        } errorResult: { error in
+            fetchResult(.failure(error))
+        }
+    }
+    
     /// Executes API Call to fetch features and send data for remote eval
     func fetchRemoteEval(apiUrl: String, params: RemoteEvalParams?, fetchResult: @escaping (Result<Data, Error>) -> Void) {
         var payload: [String: Any] = [:]
@@ -28,6 +36,21 @@ class FeaturesDataSource {
         }
                  
         dispatcher.consumePOSTRequest(url: apiUrl, params: payload) { data in
+            fetchResult(.success(data))
+        } errorResult: { error in
+            fetchResult(.failure(error))
+        }
+    }
+    
+    func fetchRemoteEval(apiRequest: URLRequest, params: RemoteEvalParams?, fetchResult: @escaping (Result<Data, Error>) -> Void) {
+        var payload: [String: Any] = [:]
+        if let params = params {
+            payload["attributes"] = params.attributes?.object
+            payload["forcedFeatures"] = params.forcedFeatures?.arrayObject
+            payload["forcedVariations"] = params.forcedVariations?.object
+        }
+                 
+        dispatcher.consumePOSTRequest(urlRequest: apiRequest, params: payload) { data in
             fetchResult(.success(data))
         } errorResult: { error in
             fetchResult(.failure(error))

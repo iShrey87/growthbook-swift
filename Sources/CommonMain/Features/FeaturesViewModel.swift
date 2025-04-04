@@ -56,7 +56,7 @@ class FeaturesViewModel {
     }
 
     /// Fetch Features
-    func fetchFeatures(apiUrl: String?, remoteEval: Bool = false, payload: RemoteEvalParams? = nil) {
+    func fetchFeatures(apiUrlRequest: URLRequest?, remoteEval: Bool = false, payload: RemoteEvalParams? = nil) {
         // Check for cache data
         if let json = manager.getData(fileName: Constants.featureCache) {
             let decoder = JSONDecoder()
@@ -72,9 +72,9 @@ class FeaturesViewModel {
             logger.info("Cache directory is empty. Nothing to fetch.")
         }
         
-        if let apiUrl = apiUrl {
+        if let apiRequest = apiUrlRequest {
             if remoteEval {
-                dataSource.fetchRemoteEval(apiUrl: apiUrl, params: payload) { result in
+                dataSource.fetchRemoteEval(apiRequest: apiRequest, params: payload) { result in
                     switch result {
                     case .success(let data):
                         self.prepareFeaturesData(data: data)
@@ -84,7 +84,7 @@ class FeaturesViewModel {
                     }
                 }
             } else {
-                dataSource.fetchFeatures(apiUrl: apiUrl) { result in
+                dataSource.fetchFeatures(apiUrlRequest: apiRequest) { result in
                     switch result {
                     case .success(let data):
                         self.prepareFeaturesData(data: data)
