@@ -222,7 +222,7 @@ class FeatureEvaluator {
             print("value.array:\(value.array?.description)")
             print("isFalse: \(isFalse)")
         }
-        return FeatureResult(value: value, isOn: isFalse, source: source.rawValue, experiment: experiment, result: result, ruleId: ruleId)
+        return FeatureResult(value: value, isOn: !isFalse, source: source.rawValue, experiment: experiment, result: result, ruleId: ruleId)
     }
 }
 
