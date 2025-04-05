@@ -65,10 +65,12 @@ class FeaturesViewModel {
                 delegate?.featuresFetchedSuccessfully(features: features, isRemote: false)
             } else {
                 delegate?.featuresFetchFailed(error: .failedParsedData, isRemote: false)
+                print("fetchFeatures: error: failedParsedData")
                 logger.error("Failed parse local data")
             }
         } else {
             delegate?.featuresFetchFailed(error: .failedToLoadData, isRemote: false)
+            print("fetchFeatures: error: failedToLoadData")
             logger.info("Cache directory is empty. Nothing to fetch.")
         }
         
@@ -77,9 +79,11 @@ class FeaturesViewModel {
                 dataSource.fetchRemoteEval(apiRequest: apiRequest, params: payload) { result in
                     switch result {
                     case .success(let data):
+                        print("fetchFeatures sucess : fetchRemoteEval: data")
                         self.prepareFeaturesData(data: data)
                     case .failure(let error):
                         self.delegate?.featuresFetchFailed(error: .failedToLoadData, isRemote: true)
+                        print("fetchFeatures: error: failedToLoadData")
                         logger.error("Failed get features: \(error.localizedDescription)")
                     }
                 }
@@ -87,8 +91,10 @@ class FeaturesViewModel {
                 dataSource.fetchFeatures(apiUrlRequest: apiRequest) { result in
                     switch result {
                     case .success(let data):
+                        print("fetchFeatures sucess : data")
                         self.prepareFeaturesData(data: data)
                     case .failure(let error):
+                        print("fetchFeatures: error: \(error.localizedDescription)")
                         self.delegate?.featuresFetchFailed(error: .failedToLoadData, isRemote: true)
                         logger.error("Failed get features: \(error.localizedDescription)")
                     }
@@ -96,6 +102,7 @@ class FeaturesViewModel {
             }
         } else {
             delegate?.featuresFetchFailed(error: .failedMissingKey, isRemote: true)
+            print("Failed get api URL")
             logger.error("Failed get api URL")
         }
     }

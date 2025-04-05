@@ -240,6 +240,7 @@ public struct GrowthBookModel {
     }
 
     @objc public func featuresFetchedSuccessfully(features: [String: Feature], isRemote: Bool) {
+        print("featuresFetchedSuccessfully features : \(features.description)")
         gbContext.features = features
         if isRemote {
             refreshHandler?(true)
