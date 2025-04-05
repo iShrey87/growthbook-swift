@@ -16,6 +16,7 @@ class CoreNetworkClient: NetworkProtocol {
 
         let request = URLSession.shared.dataTask(with: url) {(data: Data?, response: URLResponse?, error: Error?) in
             if let error = error {
+                print("consumeGETRequest url: \(url.absoluteString) Error: \(error)")
                 errorResult(error)
             }
             guard let responseData = data else { return }
@@ -42,6 +43,7 @@ class CoreNetworkClient: NetworkProtocol {
         
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
+                print("consumePOSTRequest url: \(url.absoluteString) Error: \(error)")
                 errorResult(error)
             }
             guard let responseData = data else { return }
@@ -67,6 +69,7 @@ class CoreNetworkClient: NetworkProtocol {
         
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
+                print("consumePOSTRequest urlRequest: \(urlRequest.url?.absoluteString ?? "NO URL") Error: \(error)")
                 errorResult(error)
             }
             guard let responseData = data else { return }
@@ -79,6 +82,7 @@ class CoreNetworkClient: NetworkProtocol {
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { data, response, error in
             if let error = error {
+                print("consumeGetRequest urlRequest: \(urlRequest.url?.absoluteString ?? "NO URL") Error: \(error)")
                 errorResult(error)
             }
             guard let responseData = data else { return }
