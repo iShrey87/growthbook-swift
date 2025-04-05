@@ -217,6 +217,7 @@ class FeatureEvaluator {
         var isFalse = false
         if let value = value {
             isFalse = value.stringValue == "false" || value.stringValue == "0" || (value.stringValue.isEmpty && value.dictionary == nil && value.array == nil)
+            print("isFalse: \(isFalse)")
         }
         return FeatureResult(value: value, isOn: !isFalse, source: source.rawValue, experiment: experiment, result: result, ruleId: ruleId)
     }
