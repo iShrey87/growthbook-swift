@@ -240,9 +240,6 @@ public struct GrowthBookModel {
     }
 
     @objc public func featuresFetchedSuccessfully(features: [String: Feature], isRemote: Bool) {
-        print("featuresFetchedSuccessfully features dictionary : \(features.description)")
-        let feature : Feature = features["XPC-RoutePackets"]!
-        print("featuresFetchedSuccessfully feature : \(feature.defaultValue?.debugDescription)")
         gbContext.features = features
         if isRemote {
             refreshHandler?(true)
